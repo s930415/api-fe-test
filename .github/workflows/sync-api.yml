@@ -11,7 +11,7 @@ on:
         required: false
         default: main
       target-branch:
-        description: 目標前端分支（ad-hoc 用；留空則走 branch-map / 同名）
+        description: 目標前端分支（ad-hoc 用；留空預設 main）
         required: false
         default: ''
 
@@ -20,8 +20,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: s930415/be2fe-actions/.github/workflows/fe-sync-api.yml@v1
+    uses: s930415/be2fe-actions/.github/workflows/fe-sync-api.yml@v2
     with:
       backend-repo: s930415/api-be-test
-      # 同名分支自動成立;命名不同才寫 branch-map:
-      # branch-map: '{"dev": "feature/experimental"}'
+      # 同名分支自動成立;命名不同 / 某支 feature 盯特定後端分支才寫 subscribe:
+      subscribe: '{"feature/exp": "dev"}'

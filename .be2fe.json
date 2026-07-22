@@ -1,0 +1,8 @@
+{
+  "backendRepo": "s930415/api-be-test",
+  "specPath": "openapi.yaml",
+  "schemaPath": "src/api/schema.ts",
+  "subscribe": {
+    "feature/exp": "dev"
+  }
+}

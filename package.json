@@ -6,9 +6,12 @@
   "type": "module",
   "scripts": {
     "gen": "openapi-typescript openapi.yaml -o src/api/schema.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:api": "node scripts/check-api.mjs",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.0",
     "openapi-typescript": "^7.4.0",
     "typescript": "^5.5.0"
   }

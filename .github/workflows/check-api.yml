@@ -1,0 +1,12 @@
+name: Check API compatibility
+
+# Thin caller —— push 時的保險,跟本地 pre-commit hook 跑同一支 scripts/check-api.mjs。
+# 驗證本分支程式碼與「訂閱的後端分支合約」相容;不相容 → CI 紅(不能被 --no-verify 繞過)。
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  check:
+    uses: s930415/be2fe-actions/.github/workflows/fe-check-api.yml@v2

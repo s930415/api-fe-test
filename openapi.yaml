@@ -59,6 +59,10 @@ components:
           description: 庫存數量
           format: int32
           example: 100
+        category:
+          type: string
+          description: 商品分類
+          example: drinks
     Health:
       type: object
       properties:

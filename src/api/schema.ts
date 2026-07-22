@@ -66,6 +66,11 @@ export interface components {
              * @example 100
              */
             stock?: number;
+            /**
+             * @description 商品分類
+             * @example drinks
+             */
+            category?: string;
         };
         Health: {
             /**

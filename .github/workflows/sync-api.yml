@@ -10,6 +10,10 @@ on:
         description: 要同步的後端 commit SHA（預設 main）
         required: false
         default: main
+      target-branch:
+        description: 目標前端分支（ad-hoc 用；留空則走 branch-map / 同名）
+        required: false
+        default: ''
 
 jobs:
   sync:
@@ -19,3 +23,5 @@ jobs:
     uses: s930415/be2fe-actions/.github/workflows/fe-sync-api.yml@v1
     with:
       backend-repo: s930415/api-be-test
+      # 同名分支自動成立;命名不同才寫 branch-map:
+      # branch-map: '{"dev": "feature/experimental"}'

@@ -76,6 +76,11 @@ export interface components {
              * @example SKU-001
              */
             sku?: string;
+            /**
+             * @description 條碼
+             * @example 4710011401234
+             */
+            barcode?: string;
         };
         Health: {
             /**

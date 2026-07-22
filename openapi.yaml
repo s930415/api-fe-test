@@ -43,7 +43,7 @@ components:
           example: ok
     Product:
       type: object
-      required: [id, name, price]
+      required: [id, name, price, stock]
       properties:
         id:
           type: integer
@@ -53,3 +53,6 @@ components:
         price:
           type: number
           format: float
+        stock:
+          type: integer
+          description: 庫存數量

@@ -67,6 +67,10 @@ components:
           type: string
           description: 商品貨號
           example: SKU-001
+        barcode:
+          type: string
+          description: 條碼
+          example: "4710011401234"
     Health:
       type: object
       properties:

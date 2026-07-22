@@ -52,6 +52,8 @@ export interface components {
             name: string;
             /** Format: float */
             price: number;
+            /** @description 庫存數量 */
+            stock: number;
         };
     };
     responses: never;

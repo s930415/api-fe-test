@@ -63,6 +63,10 @@ components:
           type: string
           description: 商品分類
           example: drinks
+        sku:
+          type: string
+          description: 商品貨號
+          example: SKU-001
     Health:
       type: object
       properties:

@@ -16,9 +16,20 @@ npm run typecheck    # tsc --noEmit
 
 ## 自動同步
 
-`.github/workflows/sync-api.yml` 監聽後端來的 `repository_dispatch`(type `backend-api-updated`):
-抓後端該 sha 的 `openapi.yaml` → `npm run gen` → typecheck → 有 diff 就用
-`peter-evans/create-pull-request` 開 PR。
+`.github/workflows/sync-api.yml` 是 **thin caller**,實際邏輯在
+[`s930415/be2fe-actions`](https://github.com/s930415/be2fe-actions)(reusable workflow,pin `@v2`)。
 
-需先在 repo Settings 打開「Allow GitHub Actions to create and approve pull requests」,
-見上層 [SETUP.md](../SETUP.md)。
+它監聽後端來的 `repository_dispatch`(type `backend-api-updated`),然後:
+反查 `subscribe` 決定「我哪些分支訂閱了該後端分支」→ checkout 目標分支 →
+抓該 sha 的 `openapi.yaml` → `npm run gen` → typecheck → 有 diff 就開 PR(base = 目標分支)。
+
+### 分支訂閱(前端當家)
+
+caller 的 `subscribe`(key = 前端分支 → 要監聽的後端分支)決定對應;**同名(main→main、uat→uat)免寫**。
+本 POC 目前設:
+
+```yaml
+subscribe: '{"feature/exp": "dev"}'   # feature/exp 監聽後端 dev
+```
+
+需先在 repo Settings 打開「Allow GitHub Actions to create and approve pull requests」,見上層 [SETUP.md](../SETUP.md)。

@@ -12,7 +12,7 @@ async function listProducts(): Promise<Product[]> {
 
 listProducts().then((products) => {
   for (const p of products) {
-    // 故意用一個後端合約沒有的欄位 discount → 應被 pre-commit 擋下
-    console.log(`${p.id}: ${p.name} - $${p.price} (${p.discount}%)`);
+    // supplier 是後端 dev 合約有的欄位 → 相容,commit / CI 應通過
+    console.log(`${p.id}: ${p.name} - $${p.price} @ ${p.supplier}`);
   }
 });

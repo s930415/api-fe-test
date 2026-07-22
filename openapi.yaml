@@ -1,58 +1,68 @@
-openapi: 3.0.3
+openapi: 3.0.1
 info:
   title: api-be-test
+  description: POC 後端 (Spring Boot + springdoc 自動產生合約)
   version: 1.0.0
-  description: >-
-    POC 後端 API 合約(source of truth)。
-    改動這個檔案 = 模擬一次 API 變更;merge 到 main 後會自動觸發前端 repo 重新產生型別。
 servers:
-  - url: http://localhost:3000
+- url: http://localhost:8080
+  description: local
 paths:
-  /health:
-    get:
-      operationId: getHealth
-      summary: 健康檢查
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Health'
   /products:
     get:
-      operationId: listProducts
+      tags:
+      - product-controller
       summary: 取得商品列表
+      operationId: listProducts
       responses:
-        '200':
-          description: 商品陣列
+        "200":
+          description: OK
           content:
-            application/json:
+            '*/*':
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: "#/components/schemas/Product"
+  /health:
+    get:
+      tags:
+      - health-controller
+      summary: 健康檢查
+      operationId: getHealth
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Health"
 components:
   schemas:
-    Health:
-      type: object
-      required: [status]
-      properties:
-        status:
-          type: string
-          example: ok
     Product:
       type: object
-      required: [id, name, price, stock]
       properties:
         id:
           type: integer
+          description: 商品 ID
           format: int64
+          example: 1
         name:
           type: string
+          description: 商品名稱
+          example: Coffee
         price:
           type: number
-          format: float
+          description: 價格
+          format: double
+          example: 4.5
         stock:
           type: integer
           description: 庫存數量
+          format: int32
+          example: 100
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 服務狀態
+          example: ok

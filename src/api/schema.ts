@@ -4,23 +4,6 @@
  */
 
 export interface paths {
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 健康檢查 */
-        get: operations["getHealth"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/products": {
         parameters: {
             query?: never;
@@ -38,22 +21,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 健康檢查 */
+        get: operations["getHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Health: {
-            /** @example ok */
-            status: string;
-        };
         Product: {
-            /** Format: int64 */
-            id: number;
-            name: string;
-            /** Format: float */
-            price: number;
-            /** @description 庫存數量 */
-            stock: number;
+            /**
+             * Format: int64
+             * @description 商品 ID
+             * @example 1
+             */
+            id?: number;
+            /**
+             * @description 商品名稱
+             * @example Coffee
+             */
+            name?: string;
+            /**
+             * Format: double
+             * @description 價格
+             * @example 4.5
+             */
+            price?: number;
+            /**
+             * Format: int32
+             * @description 庫存數量
+             * @example 100
+             */
+            stock?: number;
+        };
+        Health: {
+            /**
+             * @description 服務狀態
+             * @example ok
+             */
+            status?: string;
         };
     };
     responses: never;
@@ -64,6 +83,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    listProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Product"][];
+                };
+            };
+        };
+    };
     getHealth: {
         parameters: {
             query?: never;
@@ -79,27 +118,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Health"];
-                };
-            };
-        };
-    };
-    listProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品陣列 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Product"][];
+                    "*/*": components["schemas"]["Health"];
                 };
             };
         };

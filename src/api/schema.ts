@@ -76,6 +76,11 @@ export interface components {
              * @example SKU-001
              */
             sku?: string;
+            /**
+             * @description 供應商
+             * @example ACME
+             */
+            supplier?: string;
         };
         Health: {
             /**

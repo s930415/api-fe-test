@@ -67,6 +67,10 @@ components:
           type: string
           description: 商品貨號
           example: SKU-001
+        supplier:
+          type: string
+          description: 供應商
+          example: ACME
     Health:
       type: object
       properties:

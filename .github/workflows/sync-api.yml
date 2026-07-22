@@ -1,0 +1,81 @@
+name: Sync API types from backend
+
+# 觸發時機:
+#  1. repository_dispatch —— 後端 merge 後打過來的事件(真實情境)
+#  2. workflow_dispatch —— 手動測,可指定要同步的後端 sha(預設 main)
+on:
+  repository_dispatch:
+    types: [backend-api-updated]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 要同步的後端 commit SHA(預設 main)
+        required: false
+        default: main
+
+permissions:
+  contents: write        # create-pull-request 要推分支
+  pull-requests: write   # create-pull-request 要開 PR
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 前端 repo
+        uses: actions/checkout@v4
+
+      - name: 解析後端 ref
+        id: vars
+        env:
+          EVENT: ${{ github.event_name }}
+          DISPATCH_SHA: ${{ github.event.client_payload.sha }}
+          INPUT_SHA: ${{ github.event.inputs.sha }}
+        run: |
+          if [ "$EVENT" = "repository_dispatch" ]; then
+            echo "sha=$DISPATCH_SHA" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=$INPUT_SHA" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 抓後端該 sha 的 openapi.yaml
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+        run: |
+          echo "Fetching openapi.yaml @ $SHA"
+          # 後端 repo 為 public,raw URL 免驗證即可抓取
+          curl -sSf \
+            "https://raw.githubusercontent.com/s930415/api-be-test/$SHA/openapi.yaml" \
+            -o openapi.yaml
+          echo "--- 抓到的合約 ---"
+          cat openapi.yaml
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 安裝依賴
+        run: npm install --no-audit --no-fund
+
+      - name: 重新產生 API 型別
+        run: npm run gen
+
+      - name: 型別檢查(sanity check)
+        run: npm run typecheck
+
+      - name: 有 diff 就開 PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(api): sync types from backend @ ${{ steps.vars.outputs.sha }}"
+          branch: api-sync/${{ steps.vars.outputs.sha }}
+          delete-branch: true
+          title: "🔄 Sync API types from backend"
+          body: |
+            後端 API 合約有變更,已自動抓最新 `openapi.yaml` 並重新產生型別。
+
+            - 來源 repo:`${{ github.event.client_payload.repo || 'manual' }}`
+            - Backend SHA:`${{ steps.vars.outputs.sha }}`
+            - 後端 PR:#${{ github.event.client_payload.pr_number || 'N/A' }}
+
+            請 review `openapi.yaml` 與 `src/api/schema.ts` 的變更後再 merge。
+          labels: api-sync

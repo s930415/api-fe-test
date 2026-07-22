@@ -1,0 +1,15 @@
+{
+  "name": "api-fe-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "POC frontend - 消費後端 OpenAPI 合約,自動同步型別",
+  "type": "module",
+  "scripts": {
+    "gen": "openapi-typescript openapi.yaml -o src/api/schema.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.4.0",
+    "typescript": "^5.5.0"
+  }
+}
